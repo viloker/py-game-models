@@ -11,17 +11,17 @@ def main() -> None:
     for player in players:
 
         player_race = players[player].get("race")
+        if player_race:
+            race = (Race.objects
+                    .get_or_create(name=player_race.get("name"),
+                                   description=player_race.get("description")))
 
-        race = (Race.objects
-                .get_or_create(name=player_race.get("name"),
-                               description=player_race.get("description")))
-
-        for skill in player_race.get("skills"):
-            Skill.objects.get_or_create(
-                name=skill.get("name"),
-                bonus=skill.get("bonus"),
-                race=race[0]
-            )
+            for skill in player_race.get("skills", []):
+                Skill.objects.get_or_create(
+                    name=skill.get("name"),
+                    bonus=skill.get("bonus"),
+                    race=race[0]
+                )
 
         player_guild = players[player].get("guild")
         if player_guild:
